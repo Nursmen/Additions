@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- add react, reactDOM, boble -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body>
+    <h1 style="font-weight: bold; margin-top: 30px;">Addition</h1>
+    <div class="addition">
+    </div>
+
+    <div class="timer">1:00</div>
+
+    <br><br>
+
+    <div class="pink" style="background-color: pink; padding: 10px; width: 600px;">I'm too lazy to manually darken my site. So I have inverted all the colors on this page. And by the way, this text is now on a pink background, but no one will understand it :)</div>
+
+    <script type="text/babel">
+        alert('You need press space to submit your answer');
+
+        function Addition() {
+            const [state, setState] = React.useState(
+                {
+                    first: Math.floor(Math.random() * 10),
+                    second: Math.floor(Math.random() * 10),
+                    result: '',
+                }
+            );
+
+            const [points, setPoints] = React.useState(0);
+
+            function changed(e){
+                setState({
+                    ...state,
+                    result: e.target.value,
+                });
+            }    
+
+            function check(e){
+                if (e.key === ' ') {
+                    if(state.result == state.first + state.second){
+                        setPoints(points + 1);
+                        setState({
+                            first: Math.floor(Math.random() * 10),
+                            second: Math.floor(Math.random() * 10),
+                            result: '',
+                        });
+                    }else{
+                        setPoints(points - 1);
+                        // clean input
+                        setState({
+                            ...state,
+                            result: '',
+                        });
+                    }
+
+                }
+            }
+
+            return (
+                <div>
+                    <h1>{state.first} + {state.second}</h1>
+                    <input onKeyPress={check} onChange={changed} value={state.result}/>
+                    <h3>points: {points}</h3>
+                </div>
+            );
+        }
+
+        ReactDOM.render(
+            <Addition />,
+            document.querySelector('.addition')
+        );
+
+        document.querySelector('input').focus();
+        // create timer without react
+        function Timer() {
+            let seconds = 60;
+            let timer = setInterval(() => {
+                seconds--;
+                if (seconds < 10 ) {
+                    document.querySelector('.timer').innerHTML = '0:0' + seconds;
+                }else{
+                    document.querySelector('.timer').innerHTML = '0:' + seconds;
+                }
+
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    alert('Game over');
+                    document.querySelector('.addition').innerHTML = 'you lose';
+                }
+            }, 1000);
+        }
+
+        Timer();
+    </script>
+
+    <script>
+            // the css we are going to inject
+            var css = 'html {-webkit-filter: invert(100%);' +
+            '-moz-filter: invert(100%);' + 
+            '-o-filter: invert(100%);' + 
+            '-ms-filter: invert(100%); }',
+            
+            head = document.getElementsByTagName('head')[0],
+            style = document.createElement('style');
+            
+            // a hack, so you can "invert back" clicking the bookmarklet again
+            if (!window.counter) { window.counter = 1;} else  { window.counter ++;
+            if (window.counter % 2 == 0) { var css ='html {-webkit-filter: invert(0%); -moz-filter:    invert(0%); -o-filter: invert(0%); -ms-filter: invert(0%); }'}
+            };
+            
+            style.type = 'text/css';
+            if (style.styleSheet){
+                style.styleSheet.cssText = css;
+            } else {
+                style.appendChild(document.createTextNode(css));
+            }
+            
+            //injecting the css to the head
+            head.appendChild(style);
+    </script>
+
+    <style>
+        body {
+            margin-left: 20px;
+        }
+
+        .timer {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            right: 0;
+            font-size: 60px;
+            font-weight: bold;
+        }
+    </style>
+</body>
+</html>
